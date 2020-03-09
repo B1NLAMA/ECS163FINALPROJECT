@@ -56,17 +56,12 @@ function brush() {
           });
       });
 
-
-
     //set un-brushed foreground line disappear
     foreground.classed("fade", function(d,i) {
         return !actives.every(function(active) {
           console.log(active);
             var dim = active.dimension;
-          // console.log(y[dim](d[dim]));
-          // console.log(active.extent);
             var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
-            console.log(included);
             return included
         });
     });
@@ -83,7 +78,6 @@ function drawParallel(filteryear, filtermonth) {
 
     //this will remove the unnecessary data indee that won't be used in parallel coordinates
     newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "published_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url"})
-    // console.log(newdata);
 
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {

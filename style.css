@@ -1,0 +1,13 @@
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+svg {
+  margin: 0px auto;
+  display: block;
+}
+/* 
+.foreground path.fade {
+    stroke-opacity: .01;
+} */

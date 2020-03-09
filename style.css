@@ -7,7 +7,7 @@ svg {
   margin: 0px auto;
   display: block;
 }
-/* 
-.foreground path.fade {
-    stroke-opacity: .01;
-} */
+
+.fade {
+  opacity: .2;
+}

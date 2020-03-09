@@ -11,7 +11,7 @@ var x = d3.scalePoint()
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
 
 var tag = [],
-  selectedtag = "business";
+  selectedtag = ["business"];
 // var color = d3.scaleOrdinal()
 
 var parSvg = d3.select("#parallel")
@@ -23,6 +23,23 @@ var parSvg = d3.select("#parallel")
         "translate(" + margin.left + "," + margin.top + ")");
 
 function brushstart() {
+  var actives = [];
+  parSvg.selectAll(".brush")
+      .filter(function(d) {
+          return d3.brushSelection(this);
+      })
+      .each(function(d) {
+          actives.push({
+              dimension: d,
+              extent: d3.brushSelection(this)
+          });
+      });
+
+    actives.every(function(d) {
+      if (d.extent[0] === d.extent[1]) {
+        foreground.classed("fade", false);
+      }
+    })
   d3.event.sourceEvent.stopPropagation();
 }
 
@@ -38,27 +55,21 @@ function brush() {
               extent: d3.brushSelection(this)
           });
       });
-      // retag = d3.event.selection.map(tag.invert);
-      // console.log(retag);
-  //
+
+
 
     //set un-brushed foreground line disappear
     foreground.classed("fade", function(d,i) {
         return !actives.every(function(active) {
-          console.log("fade");
+          console.log(active);
             var dim = active.dimension;
-            return active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
+          // console.log(y[dim](d[dim]));
+          // console.log(active.extent);
+            var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
+            console.log(included);
+            return included
         });
     });
-
-  // // // set un-brushed foreground line disappear
-  // foreground.style('display', function(d) {
-  //   return actives.every(function(active) {
-  //     console.log("here");
-  //     var dim = active.dimension;
-  //     return active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim]) <= active.extent[1];
-  //   }) ? null : 'none';
-  // });
 }
 var filteryear = "2007",
   filtermonth = "Jan";
@@ -74,8 +85,24 @@ function drawParallel(filteryear, filtermonth) {
     newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "published_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url"})
     // console.log(newdata);
 
+    // add tag to the tag variable and then parse it using JSON.
+    data.forEach(function(d) {
+      // unixtime = new Date(d.published_date*1000);
+      // year.push(unixtime.getFullYear());
+      // month.push(months_arr[unixtime.getMonth()]);
+      d.tags = (JSON.parse(d.tags.replace(/'/g, "\"")));
+    })
+
     // filter the data to only get the data for the following years, month, and tags
-    data = data.filter(d => ((d.year === filteryear) && (d.month == filtermonth)) )
+    data = data.filter(function(d) {
+      var included = false;
+      for(var i= 0; i < d.tags.length; i++) {
+        if ((selectedtag.indexOf(d.tags[i])) != -1) {
+          included = true;
+        }
+      }
+      return ((d.year === filteryear) && (d.month === filtermonth)) && included
+    })
 
     // this will have the dimenstions of the axis
     newdata.forEach(function(d) {
@@ -89,14 +116,8 @@ function drawParallel(filteryear, filtermonth) {
         .on("brush", brush)
 
     })
-    // add tag to the tag variable and then parse it using JSON.
-    data.forEach(function(d) {
-      // unixtime = new Date(d.published_date*1000);
-      // year.push(unixtime.getFullYear());
-      // month.push(months_arr[unixtime.getMonth()]);
-      tag.push(JSON.parse(d.tags.replace(/'/g, "\"")));
-    })
-    console.log(tag[0][3]);
+
+    console.log(data,tag);
 
     // set the domain for x
     x.domain(newdata)
@@ -114,18 +135,6 @@ function drawParallel(filteryear, filtermonth) {
       .selectAll(".parpath")
       .data(data)
       .enter().append("path")
-      // .filter(function(d) {
-      //   for(var i = 0; i < tag.length; i++) {
-      //     for (var j = 0; j < tag[i].length; j++) {
-      //       if (selectedtag != undefined) {
-      //         console.log(tag[i][j]);
-      //         return (tag[i][j] === selectedtag);
-      //       } else {
-      //         return (tag[i][j]);
-      //       }
-      //     }
-      //   }
-      // })
       .attr("d",  path)
       .style("fill", "none")
       .style("stroke-width", 3)
@@ -133,18 +142,19 @@ function drawParallel(filteryear, filtermonth) {
       .on("click", function(d) {
         if (!click) {
           console.log("workds");
-          d3.select(this.parentNode).selectAll("path").style("opacity", 0.2)
-          d3.select(this).style("opacity", 1)
+          d3.select(this.parentNode).selectAll("path").style("stroke-width", 3)
+          d3.select(this).style("stroke-width", 6)
           click = true;
           }
         else {
           console.log("asdfasd");
-          d3.select(this.parentNode).selectAll("path").style("opacity", 1)
-          d3.select(this).style("opacity", 1)
+          d3.select(this.parentNode).selectAll("path").style("stroke-width", 3)
+          d3.select(this).style("stroke-width", 3)
           click = false;
         }
-      })
-      .append("title")
+      });
+
+      foreground.append("title")
         .text(function(d) {
           return d.name;
         })

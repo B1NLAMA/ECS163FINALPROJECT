@@ -17,6 +17,8 @@ I have improved the filter now and also changed the way our selection interacts 
 I figured out how to filter by the tags, year and month.
 
 ```
+This is an code that calls the filter.
+
 data = data.filter(function(d) {
   var included = false;
   for(var i= 0; i < d.tags.length; i++) {

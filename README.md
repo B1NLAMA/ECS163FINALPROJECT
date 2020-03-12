@@ -15,6 +15,7 @@ I have not started on it yet. Still thinking about the data.
 I have plotted the parallel coordinates chart.
 I have improved the filter now and also changed the way our selection interacts with the line.
 I figured out how to filter by the tags, year and month.
+I have added legend and also added color by tags.
 
 ```
 This is an code that calls the filter.

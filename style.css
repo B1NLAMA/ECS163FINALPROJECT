@@ -3,10 +3,20 @@ body, html {
   height: 100%;
 }
 
-svg {
+#parallel {
+  flex: 1;
+  height: 100%;
+  width: 100%;
   margin: 0px auto;
   display: block;
 }
+
+#bubble {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
 
 .fade {
   opacity: .2;

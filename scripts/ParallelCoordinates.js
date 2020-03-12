@@ -11,7 +11,7 @@ var x = d3.scalePoint()
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
 
 var tag = [],
-  selectedtag = ["business"];
+  selectedtag = ["business", "health"];
 // var color = d3.scaleOrdinal()
 
 var parSvg = d3.select("#parallel")
@@ -66,6 +66,7 @@ function brush() {
         });
     });
 }
+
 var filteryear = "2007",
   filtermonth = "Jan";
 
@@ -111,8 +112,6 @@ function drawParallel(filteryear, filtermonth) {
 
     })
 
-    console.log(data,tag);
-
     // set the domain for x
     x.domain(newdata)
 
@@ -122,7 +121,7 @@ function drawParallel(filteryear, filtermonth) {
     }
 
     var click = false;
-    // console.log(tag[0].length);
+
     // Draw the lines
     foreground = parSvg.append("g")
       .attr("class", "foreground")
@@ -132,7 +131,13 @@ function drawParallel(filteryear, filtermonth) {
       .attr("d",  path)
       .style("fill", "none")
       .style("stroke-width", 3)
-      .style("stroke", function(d,i) { return parcolor(i) })
+      .style("stroke", function(d,i) {
+        for(var i= 0; i < d.tags.length; i++) {
+          if ((selectedtag.indexOf(d.tags[i])) != -1) {
+            return parcolor(d.tags[i])
+          }
+        }
+      })
       .on("click", function(d) {
         if (!click) {
           console.log("workds");
@@ -169,7 +174,6 @@ function drawParallel(filteryear, filtermonth) {
       // build the axis
       .each(function(d) { d3.select(this)
         .call(d3.axisLeft(y[d]))
-        // .scale(y[d]));
       })
       // Add axis title
       .append("text")
@@ -185,6 +189,31 @@ function drawParallel(filteryear, filtermonth) {
       .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
+
+    // adding a legend
+    var legend = parSvg.selectAll("legend")
+      .data(selectedtag)
+      .enter()
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) {
+        return "translate(10," + (i *20 + 250) + ")";
+      });
+
+    legend.append("rect")
+      .attr("class", String)
+      .attr("x", 16)
+      .attr("y", -4)
+      .attr("width", 5)
+      .attr("height", 5)
+      .attr("fill", function(d,i) {
+            return parcolor(selectedtag[i])
+      });
+      console.log(selectedtag);
+    legend.append("text")
+      .attr("x", 28)
+      .attr("dy", ".31em")
+      .text(function(d) { return d; });
 
 
   })

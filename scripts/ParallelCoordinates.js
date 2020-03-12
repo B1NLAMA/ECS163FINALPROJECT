@@ -78,7 +78,7 @@ function drawParallel(filteryear, filtermonth) {
     parSvg.selectAll("*").remove();
 
     //this will remove the unnecessary data indee that won't be used in parallel coordinates
-    newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "published_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url"})
+    newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "published_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url" && d != "date"})
 
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {
@@ -202,7 +202,7 @@ function drawParallel(filteryear, filtermonth) {
 
     legend.append("rect")
       .attr("class", String)
-      .attr("x", 16)
+      .attr("x", 40)
       .attr("y", -4)
       .attr("width", 5)
       .attr("height", 5)
@@ -211,7 +211,7 @@ function drawParallel(filteryear, filtermonth) {
       });
 
     legend.append("text")
-      .attr("x", 28)
+      .attr("x", 52)
       .attr("dy", ".31em")
       .text(function(d) { return d; });
 

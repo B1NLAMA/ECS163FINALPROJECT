@@ -17,9 +17,6 @@ d3.csv("./data/ted_main.csv", function(error, data) {
   bubSvg.selectAll("*").remove();
 
   data.forEach(function(d) {
-    // unixtime = new Date(d.published_date*1000);
-    // year.push(unixtime.getFullYear());
-    // month.push(months_arr[unixtime.getMonth()]);
     d.tags = (JSON.parse(d.tags.replace(/'/g, "\"")));
   })
 

@@ -209,7 +209,7 @@ function drawParallel(filteryear, filtermonth) {
       .attr("fill", function(d,i) {
             return parcolor(selectedtag[i])
       });
-      console.log(selectedtag);
+
     legend.append("text")
       .attr("x", 28)
       .attr("dy", ".31em")

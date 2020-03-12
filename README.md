@@ -9,7 +9,13 @@ In the list below, we will write an update for what is the progress for the visu
 ### Calendar Chart
 
 ### Bubble Chart
-I have not started on it yet. Still thinking about the data.
+Done:
+  I have made the bubble chart
+
+TODO:
+  1. I have to make it interactive
+  2. I have to allow it to filter the parallel coordinates
+  3. Other things I cannot think of right now.
 
 ### Parallel Coordinates
 I have plotted the parallel coordinates chart.
@@ -32,4 +38,9 @@ data = data.filter(function(d) {
 ```
 
 ### Embedded video
-I have not started on this yet.
+DONE:
+
+TODO:
+  1. The TA told me to just make a pop up for the embedded video so, I might go with that. So, when people click on the video, I will create a pop up thing that will let them click on the link to go watch the video.
+
+  2. I have not started on this yet.

@@ -12,6 +12,7 @@ In the list below, we will write an update for what is the progress for the visu
 Done:
   I have made the bubble chart
   Made it interactive but has bugs and cannot do multiple selection
+  
 TODO:
   1. Allow multiple selections. (cannot figure it out yet)
   2. I have to allow it to filter the parallel coordinates

@@ -59,7 +59,6 @@ function brush() {
     //set un-brushed foreground line disappear
     foreground.classed("fade", function(d,i) {
         return !actives.every(function(active) {
-          console.log(active);
             var dim = active.dimension;
             var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
             return included
@@ -67,8 +66,8 @@ function brush() {
     });
 }
 
-var filteryear = "2007",
-  filtermonth = "Jan";
+var filteryear = "2010",
+  filtermonth = "Feb";
 
 function drawParallel(filteryear, filtermonth) {
   d3.csv("./data/ted_main.csv", function(error, data) {
@@ -78,7 +77,7 @@ function drawParallel(filteryear, filtermonth) {
     parSvg.selectAll("*").remove();
 
     //this will remove the unnecessary data indee that won't be used in parallel coordinates
-    newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "published_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url" && d != "date"})
+    newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "film_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url" && d != "date"})
 
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {

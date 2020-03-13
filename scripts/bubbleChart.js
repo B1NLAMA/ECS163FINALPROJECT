@@ -44,12 +44,10 @@ d3.csv("./data/ted_main.csv", function(error, data) {
     }
   })
 
-console.log(tagGroup);
   var json = d3.nest()
     .key(function(d) { return d.name })
     .rollup(function(leaves) { return leaves.length; })
     .entries(tagGroup);
-  console.log(json);
 
   var pack = d3.pack()
     .size([width2, height2])
@@ -57,7 +55,9 @@ console.log(tagGroup);
 
   var root = d3.hierarchy({children: json})
     .sum(function(d) {return d.value})
-    console.log(root);
+
+  var tooltip = d3.select(".bubtooltip");
+  var click = false;
 
   var node = bubSvg.selectAll(".presentor")
     .data(pack(root).descendants())
@@ -69,12 +69,44 @@ console.log(tagGroup);
     .attr("class", "root")
     .attr("transform", function(d) {
       return "translate(" + d.x + "," + d.y + ")";
-    });
+    })
+    .on("mouseover", function(d) {
+      tooltip.style("display", "block");
 
-  node.append("title")
-      .text(function(d) {
-          return d.data.key + ": " + d.value;
-      });
+      //set the initial position of the tooltip
+      tooltip.style("left", (d3.event.pageX) +"px");
+      tooltip.style("top", (d3.event.pageY + 10) + "px");
+      // d3.select(this)
+      //             .style("stroke","white")
+      //             .style("stroke-width",3);
+      tooltip.html("<strong>Tag: </strong>" + d.data.key + "<br>"
+      + "<strong>Frequency: </strong>" + d.data.value);
+    })
+    .on("mousemove", function(d) {
+      tooltip.style("left", (d3.event.pageX) +"px");
+      tooltip.style("top", (d3.event.pageY + 10) + "px");
+    })
+
+    .on("mouseleave", function(d) {
+      tooltip.style("display", "none");
+    })
+    .on("click", function(d) {
+      if (!click) {
+        console.log("workds");
+        d3.select(this.parentNode).selectAll("path").style("stroke-width", 3)
+        d3.select(this).style("stroke-width", 6)
+        click = true;
+        }
+      else {
+        console.log("asdfasd");
+        d3.select(this.parentNode).selectAll("path").style("stroke-width", 3)
+        d3.select(this).style("stroke-width", 3)
+        click = false;
+      }
+    })
+      // .text(function(d) {
+      //     return d.data.key + ": " + d.value;
+      // });
 
   node.append("circle")
     .attr("r", function(d) {

@@ -10,8 +10,8 @@ var x = d3.scalePoint()
 // add color for the genders
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
 
-var tag = [],
-  selectedtag = ["business", "health"];
+var selectedtag = [],
+  brushedtag = [];
 // var color = d3.scaleOrdinal()
 
 var parSvg = d3.select("#parallel")
@@ -22,54 +22,10 @@ var parSvg = d3.select("#parallel")
         .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-function brushstart() {
-  var actives = [];
-  parSvg.selectAll(".brush")
-      .filter(function(d) {
-          return d3.brushSelection(this);
-      })
-      .each(function(d) {
-          actives.push({
-              dimension: d,
-              extent: d3.brushSelection(this)
-          });
-      });
-
-    actives.every(function(d) {
-      if (d.extent[0] === d.extent[1]) {
-        foreground.classed("fade", false);
-      }
-    })
-  d3.event.sourceEvent.stopPropagation();
-}
-
-function brush() {
-  var actives = [];
-  parSvg.selectAll(".brush")
-      .filter(function(d) {
-          return d3.brushSelection(this);
-      })
-      .each(function(d) {
-          actives.push({
-              dimension: d,
-              extent: d3.brushSelection(this)
-          });
-      });
-
-    //set un-brushed foreground line disappear
-    foreground.classed("fade", function(d,i) {
-        return !actives.every(function(active) {
-            var dim = active.dimension;
-            var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
-            return included
-        });
-    });
-}
-
 var filteryear = "2010",
   filtermonth = "Feb";
 
-function drawParallel(filteryear, filtermonth) {
+function drawParallel() {
   d3.csv("./data/ted_main.csv", function(error, data) {
     if (error) throw error;
 
@@ -79,23 +35,41 @@ function drawParallel(filteryear, filtermonth) {
     //this will remove the unnecessary data indee that won't be used in parallel coordinates
     newdata = d3.keys(data[0]).filter(function(d) { return d != "film_date" && d != "film_date" && d != "tags"  && d != "year" && d != "month" && d != "name" && d != "url" && d != "date"})
 
+    // adding a new data that will have a frequency of the talk
+    var json = d3.nest()
+      .key(function(d) { return d.name })
+      .rollup(function(leaves) { return leaves.length; })
+      .entries(data);
+    console.log(json);
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {
       // unixtime = new Date(d.published_date*1000);
       // year.push(unixtime.getFullYear());
       // month.push(months_arr[unixtime.getMonth()]);
       d.tags = (JSON.parse(d.tags.replace(/'/g, "\"")));
+      json.forEach(function(e) {
+        if (d.name === e.key){
+          d.frequency = e.value
+        }
+      })
     })
+    console.log(data);
 
     // filter the data to only get the data for the following years, month, and tags
+    // if the tags are in the array, it will include the array
     data = data.filter(function(d) {
-      var included = false;
-      for(var i= 0; i < d.tags.length; i++) {
-        if ((selectedtag.indexOf(d.tags[i])) != -1) {
-          included = true;
+      if (selectedtag.length != 0) {
+        var included = false;
+        for(var i= 0; i < d.tags.length; i++) {
+          if ((selectedtag.indexOf(d.tags[i])) != -1) {
+            included = true;
+          }
         }
+        return ((d.year === filteryear) && (d.month === filtermonth)) && included
+      } else {
+        return ((d.year === filteryear) && (d.month === filtermonth))
       }
-      return ((d.year === filteryear) && (d.month === filtermonth)) && included
+
     })
 
     // this will have the dimenstions of the axis
@@ -104,6 +78,7 @@ function drawParallel(filteryear, filtermonth) {
         .domain( d3.extent(data, function(p) { return +p[d]; }) )
         .range([height, 0]);
 
+      // this will call the brush
       y[d].brush = d3.brushY()
         .extent([[-5, y[d].range()[1]], [5, y[d].range()[0]]])
         .on("start", brushstart)
@@ -121,6 +96,8 @@ function drawParallel(filteryear, filtermonth) {
 
     var click = false;
 
+    var tooltip = d3.select(".partooltip");
+
     // Draw the lines
     foreground = parSvg.append("g")
       .attr("class", "foreground")
@@ -131,11 +108,36 @@ function drawParallel(filteryear, filtermonth) {
       .style("fill", "none")
       .style("stroke-width", 3)
       .style("stroke", function(d,i) {
-        for(var i= 0; i < d.tags.length; i++) {
-          if ((selectedtag.indexOf(d.tags[i])) != -1) {
-            return parcolor(d.tags[i])
+        if(selectedtag.length != 0) {
+          for(var i= 0; i < d.tags.length; i++) {
+            if ((selectedtag.indexOf(d.tags[i])) != -1) {
+              return parcolor(d.tags[i])
+            }
           }
+        } else {
+          return parcolor(i)
         }
+
+      })
+      .on("mouseover", function(d) {
+        tooltip.style("display", "block");
+
+        //set the initial position of the tooltip
+        tooltip.style("left", (d3.event.pageX) +"px");
+        tooltip.style("top", (d3.event.pageY + 10) + "px");
+        // d3.select(this)
+        //             .style("stroke","white")
+        //             .style("stroke-width",3);
+        tooltip.html("<strong>Name: </strong>" + d.name + "<br>"
+        + "<strong> # talks: </strong>" + d.frequency);
+      })
+      .on("mousemove", function(d) {
+        tooltip.style("left", (d3.event.pageX) +"px");
+        tooltip.style("top", (d3.event.pageY + 10) + "px");
+      })
+
+      .on("mouseleave", function(d) {
+        tooltip.style("display", "none");
       })
       .on("click", function(d) {
         if (!click) {
@@ -151,11 +153,6 @@ function drawParallel(filteryear, filtermonth) {
           click = false;
         }
       });
-
-      foreground.append("title")
-        .text(function(d) {
-          return d.name;
-        })
 
     // group them together
     var axes = parSvg.selectAll(".newdata")
@@ -189,6 +186,101 @@ function drawParallel(filteryear, filtermonth) {
       .attr("x", -8)
       .attr("width", 16);
 
+    function brushstart() {
+      var actives = [];
+      parSvg.selectAll(".brush")
+          .filter(function(d) {
+              return d3.brushSelection(this);
+          })
+          .each(function(d) {
+              actives.push({
+                  dimension: d,
+                  extent: d3.brushSelection(this)
+              });
+          });
+
+      actives.every(function(d) {
+        // when you click out to remove the brush this if statement is exe
+        if (d.extent[0] === d.extent[1]) {
+          // make brushedtag undefiend so that we can reset the bubble chart
+          brushedtag = [];
+          bubbleChart();
+          // change class of non selected lines so that they have opacity of 1
+          foreground.classed("fade", false);
+
+        }
+      })
+      d3.event.sourceEvent.stopPropagation();
+    }
+
+    function brush() {
+
+      // it will store the active range that the bursh is covering
+      var actives = [];
+      parSvg.selectAll(".brush")
+          .filter(function(d) {
+              return d3.brushSelection(this);
+          })
+          .each(function(d) {
+              actives.push({
+                  dimension: d,
+                  extent: d3.brushSelection(this)
+              });
+          });
+
+          // this will provide the range of the comments
+          var comment = d3.event.selection.map(y["comments"].invert)
+
+          // var duration = d3.event.selection.map(y["duration"].invert)
+          // var languages = d3.event.selection.map(y["languages"].invert)
+          // var views = d3.event.selection.map(y["views"].invert)
+          // console.log(duration);
+          // console.log(comment[1]);
+          // changeTag(comment, duration, languages, views);
+
+          // call a function that will add a new tag to the burshed tag variable
+          changeTag(comment);
+
+          // make a new bubble chart
+          bubbleChart();
+
+        //set un-brushed foreground line disappear
+        foreground.classed("fade", function(d,i) {
+            return !actives.every(function(active) {
+                var dim = active.dimension;
+                var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
+                return included
+            });
+        });
+    }
+
+    // function changeTag(comment, duration, languages, views) {
+    function changeTag(comment) {
+
+      // add a filtered data that is filtered by the range of comments into a temp var
+      var faketag = data.filter(function(d) {
+        // if (comment.length != 0 && duration.length != 0 && languages.length != 0 && views.length != 0) {
+        //   return (((d.comments >= comment[1]) && (d.comments <= comment[0])) || ((d.duration >= duration[1]) && (d.duration <= duration[0]))
+        //     || ((d.languages >= languages[1]) && (d.languages <= languages[0])) || ((d.views >= views[1]) && (d.views <= views[0])))
+        // }
+        // if (comment.length != 0){
+        //   return ((d.comments >= comment[1]) && (d.comments <= comment[0]))
+        // } else if (duration.length != 0) {
+        //   return ((d.duration >= duration[1]) && (d.duration <= duration[0]))
+        // } else if (languages.length != 0) {
+        //   return ((d.languages >= languages[1]) && (d.languages <= languages[0]))
+        // } else if (views.length != 0) {
+        //   return ((d.views >= views[1]) && (d.views <= views[0]))
+        // }
+        return ((d.comments >= comment[1]) && (d.comments <= comment[0]))
+      })
+
+      // go through all the temp var and then add its tags into the burshedtag var so that we can use its info to change the bubble chart.
+      faketag.forEach(function(d) {
+        brushedtag.push(d.name);
+      })
+    }
+
     // adding a legend
     var legend = parSvg.selectAll("legend")
       .data(selectedtag)
@@ -199,6 +291,7 @@ function drawParallel(filteryear, filtermonth) {
         return "translate(10," + (i *20 + 250) + ")";
       });
 
+    // add a rectangle with color for the legend
     legend.append("rect")
       .attr("class", String)
       .attr("x", 40)
@@ -209,6 +302,7 @@ function drawParallel(filteryear, filtermonth) {
             return parcolor(selectedtag[i])
       });
 
+    // adding a text for the legend
     legend.append("text")
       .attr("x", 52)
       .attr("dy", ".31em")
@@ -218,4 +312,4 @@ function drawParallel(filteryear, filtermonth) {
   })
 }
 
-drawParallel(filteryear, filtermonth);
+drawParallel();

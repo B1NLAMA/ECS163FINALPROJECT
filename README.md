@@ -11,9 +11,9 @@ In the list below, we will write an update for what is the progress for the visu
 ### Bubble Chart
 Done:
   I have made the bubble chart
-
+  Made it interactive but has bugs and cannot do multiple selection
 TODO:
-  1. I have to make it interactive
+  1. Allow multiple selections. (cannot figure it out yet)
   2. I have to allow it to filter the parallel coordinates
   3. Other things I cannot think of right now.
 
@@ -22,7 +22,7 @@ I have plotted the parallel coordinates chart.
 I have improved the filter now and also changed the way our selection interacts with the line.
 I figured out how to filter by the tags, year and month.
 I have added legend and also added color by tags.
-
+Added an interaction where if brushed, it will filter the tag
 ```
 This is an code that calls the filter.
 

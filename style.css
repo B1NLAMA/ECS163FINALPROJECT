@@ -33,3 +33,16 @@ body, html {
     background-color: black;
     color: white;
 }
+
+.partooltip {
+    position: absolute;
+    left: 50%;
+    margin-left: -60px;
+    text-align: center;
+    border: 5px solid black;
+    border-radius: 5px;
+    overflow-x: visible;
+    overflow-y: visible;
+    background-color: black;
+    color: white;
+}

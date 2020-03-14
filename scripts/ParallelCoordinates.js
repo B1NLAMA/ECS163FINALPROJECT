@@ -11,7 +11,8 @@ var x = d3.scalePoint()
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
 
 var selectedtag = [],
-  brushedtag = [];
+  brushedtag = [],
+  freq = [];
 // var color = d3.scaleOrdinal()
 
 var parSvg = d3.select("#parallel")
@@ -114,7 +115,10 @@ function drawParallel() {
             }
           }
         } else {
-          return parcolor(i)
+            if (freq.indexOf(d.frequency) === -1) {
+              freq.push(d.frequency)
+            }
+          return parcolor(d.frequency)
         }
 
       })
@@ -281,33 +285,61 @@ function drawParallel() {
     }
 
     // adding a legend
-    var legend = parSvg.selectAll("legend")
-      .data(selectedtag)
-      .enter()
-      .append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) {
-        return "translate(10," + (i *20 + 250) + ")";
+    if (selectedtag.length != 0) {
+      var legend = parSvg.selectAll("legend")
+        .data(selectedtag)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) {
+          return "translate(10," + (i *20 + 250) + ")";
+        });
+
+      // add a rectangle with color for the legend
+      legend.append("rect")
+        .attr("class", String)
+        .attr("x", 40)
+        .attr("y", -4)
+        .attr("width", 5)
+        .attr("height", 5)
+        .attr("fill", function(d,i) {
+              return parcolor(selectedtag[i])
+        });
+
+      // adding a text for the legend
+      legend.append("text")
+        .attr("x", 52)
+        .attr("dy", ".31em")
+        .text(function(d) { return d; });
+    } else {
+      console.log(freq);
+      var legend = parSvg.selectAll("legend")
+        .data(freq)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) {
+          return "translate(10," + (i *20 + 250) + ")";
+        });
+
+      // add a rectangle with color for the legend
+      legend.append("rect")
+        .attr("class", String)
+        .attr("x", 40)
+        .attr("y", -4)
+        .attr("width", 5)
+        .attr("height", 5)
+        .attr("fill", function(d, i) {
+          console.log(freq);
+          return parcolor(freq[i])
       });
 
-    // add a rectangle with color for the legend
-    legend.append("rect")
-      .attr("class", String)
-      .attr("x", 40)
-      .attr("y", -4)
-      .attr("width", 5)
-      .attr("height", 5)
-      .attr("fill", function(d,i) {
-            return parcolor(selectedtag[i])
-      });
-
-    // adding a text for the legend
-    legend.append("text")
-      .attr("x", 52)
-      .attr("dy", ".31em")
-      .text(function(d) { return d; });
-
-
+      // adding a text for the legend
+      legend.append("text")
+        .attr("x", 52)
+        .attr("dy", ".31em")
+        .text(function(d) { return d; });
+    }
   })
 }
 

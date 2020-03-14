@@ -10,20 +10,22 @@ In the list below, we will write an update for what is the progress for the visu
 
 ### Bubble Chart
 Done:
-  I have made the bubble chart
-  Made it interactive but has bugs and cannot do multiple selection
-  
+  1. I have made the bubble chart
+  2. Made it interactive but has bugs and cannot do multiple selection
+  3. Allow multiple selections.
+  4. I have to allow it to filter the parallel coordinates
 TODO:
-  1. Allow multiple selections. (cannot figure it out yet)
-  2. I have to allow it to filter the parallel coordinates
-  3. Other things I cannot think of right now.
+  1. Improve the multiple selection error
 
 ### Parallel Coordinates
-I have plotted the parallel coordinates chart.
-I have improved the filter now and also changed the way our selection interacts with the line.
-I figured out how to filter by the tags, year and month.
-I have added legend and also added color by tags.
-Added an interaction where if brushed, it will filter the tag
+ 1. I have plotted the parallel coordinates chart.
+ 2. I have improved the filter now and also changed the way our selection interacts with the line.
+ 3. I figured out how to filter by the tags, year and month.
+ 4. I have added legend and also added color by tags.
+ 5. Added an interaction where if brushed, it will filter the tag
+
+TODO:
+ 1. When I filter using bubble and then filter using parallel coordinate and then go back to the original tags list, the selected tags opacity will return to normal. (don't know how to fix this yet)
 ```
 This is an code that calls the filter.
 

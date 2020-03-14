@@ -40,7 +40,7 @@ function drawParallel() {
       .key(function(d) { return d.name })
       .rollup(function(leaves) { return leaves.length; })
       .entries(data);
-    console.log(json);
+
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {
       // unixtime = new Date(d.published_date*1000);
@@ -53,7 +53,6 @@ function drawParallel() {
         }
       })
     })
-    console.log(data);
 
     // filter the data to only get the data for the following years, month, and tags
     // if the tags are in the array, it will include the array
@@ -228,30 +227,30 @@ function drawParallel() {
               });
           });
 
-          // this will provide the range of the comments
-          var comment = d3.event.selection.map(y["comments"].invert)
+        // this will provide the range of the comments
+        var comment = d3.event.selection.map(y["comments"].invert)
+        // var duration = d3.event.selection.map(y["duration"].invert)
+        // var languages = d3.event.selection.map(y["languages"].invert)
+        // var views = d3.event.selection.map(y["views"].invert)
+        // console.log(duration);
+        // console.log(comment[1]);
+        // changeTag(comment, duration, languages, views);
 
-          // var duration = d3.event.selection.map(y["duration"].invert)
-          // var languages = d3.event.selection.map(y["languages"].invert)
-          // var views = d3.event.selection.map(y["views"].invert)
-          // console.log(duration);
-          // console.log(comment[1]);
-          // changeTag(comment, duration, languages, views);
+        // call a function that will add a new tag to the burshed tag variable
+        changeTag(comment);
 
-          // call a function that will add a new tag to the burshed tag variable
-          changeTag(comment);
-
-          // make a new bubble chart
-          bubbleChart();
+        // make a new bubble chart
 
         //set un-brushed foreground line disappear
         foreground.classed("fade", function(d,i) {
-            return !actives.every(function(active) {
-                var dim = active.dimension;
-                var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
-                return included
-            });
+          return !actives.every(function(active) {
+            var dim = active.dimension;
+            var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
+            return included
+          });
         });
+        bubbleChart();
+
     }
 
     // function changeTag(comment, duration, languages, views) {

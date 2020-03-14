@@ -3,13 +3,15 @@ var margin2 = {top: 30, right: 10, bottom: 10, left: 0},
   height2 = 600 - margin2.top - margin2.bottom;
 
 var bubSvg = d3.select("#bubble")
-  .append("svg")
     .attr("width", width2 + margin2.left + margin2.right)
     .attr("height", height2 + margin2.top + margin2.bottom)
     .append("g")
       .attr("transform", "translate(0,0)");
 
-var bubcolor = d3.scaleOrdinal(d3.schemeCategory10);
+var bubcolor = d3.scaleThreshold()
+    .domain([1, 2, 3, 5, 7, 10, 15])
+    .range(["#fff7ec","#fee8c8","#fdd49e","#fdbb84","#fc8d59","#ef6548","#d7301f"]);
+
 function bubbleChart() {
   d3.csv("./data/ted_main.csv", function(error, data) {
 
@@ -69,7 +71,7 @@ function bubbleChart() {
 
     var tooltip = d3.select(".bubtooltip");
 
-    var click = false;
+    var click = [];
 
     var node = bubSvg.selectAll(".presentor")
       .data(pack(root).descendants())
@@ -83,13 +85,15 @@ function bubbleChart() {
         return "translate(" + d.x + "," + d.y + ")";
       })
 
+      var that = [];
 
     var entering = node.append("circle")
       .attr("r", function(d) {
           return d.r;
       })
       .style("fill", function(d,i) {
-          return bubcolor(i);
+        // console.log(d);
+          return bubcolor(d.data.value);
       })
       .on("mouseover", function(d) {
         tooltip.style("display", "block");
@@ -111,19 +115,24 @@ function bubbleChart() {
       .on("mouseleave", function(d) {
         tooltip.style("display", "none");
       })
-      .on("click", function(d) {
+      .on("click", function(d, i) {
         // if (!d3.select(this).classed("selected")) {
-        if (!click) {
-          console.log("goes to click");
+        if (selectedtag.indexOf(d.data.key) === -1) {
+          console.log(d3.select(this));
+          console.log(this);
           // d3.select(this).classed("selected", true);
           entering.style("opacity", 0.2)
-          d3.select(this).style("opacity", 1)
+          // if (selectedtag.indexOf(d.data.key) === -1) {
+          // allow multiple selection
+          that.push(d3.select(this))
+            for (var i =0; i < that.length; i++) {
+              that[i].style("opacity", 1)
+            }
           selectedtag.push(d.data.key);
-          click = true;
           drawParallel();
-        } else {
+        } else if (selectedtag.indexOf(d.data.key) != -1){
         // else if (d3.select(this).classed("selected")){
-          console.log("goes to else");
+          // console.log("goes to else");
           // d3.select(this).classed("selected", false);
           entering.style("opacity", 1)
           d3.select(this).style("opacity", 1)
@@ -133,6 +142,15 @@ function bubbleChart() {
               included = true
             }
             return selectedtag && included
+          })
+          
+          // remove that multiple selection
+          that = that.filter(function(d, i) {
+            var included = false;
+            if(that[i] != d) {
+              included = true
+            }
+            return that && included
           })
           click = false;
           drawParallel();
@@ -163,6 +181,31 @@ function bubbleChart() {
              return d.r/5;
          })
          .attr("fill", "white");
+
+       var x = d3.scaleLinear()
+         .domain([1, 15])
+         .range([50, 600]);
+
+       var xAxis = d3.axisBottom(x)
+         .tickSize(12)
+         .tickValues(bubcolor.domain())
+         .tickFormat(function(d) { return d });
+
+       var g = d3.select("#bubble").append("g");
+       g.attr('transform', 'translate(0, 600)')
+         .call(xAxis)
+         .selectAll("rect")
+         .data(bubcolor.range().map(function(data) {
+             var d = bubcolor.invertExtent(data);
+             if (d[0] == null) d[0] = x.domain()[0];
+             if (d[1] == null) d[1] = x.domain()[1];
+             return d;
+           }))
+         .enter().insert("rect", ".tick")
+         .attr("height", 10)
+         .attr("x", function(d) { return x(d[0]); })
+         .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+         .attr("fill", function(d) { return bubcolor(d[0])});
 
   })
 }

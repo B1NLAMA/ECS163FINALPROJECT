@@ -85,7 +85,7 @@ function bubbleChart() {
         return "translate(" + d.x + "," + d.y + ")";
       })
 
-      var that = [];
+    var that = [];
 
     var entering = node.append("circle")
       .attr("r", function(d) {
@@ -143,7 +143,7 @@ function bubbleChart() {
             }
             return selectedtag && included
           })
-          
+
           // remove that multiple selection
           that = that.filter(function(d, i) {
             var included = false;
@@ -170,42 +170,42 @@ function bubbleChart() {
        })
        .attr("fill", "white");
 
-       node.append("text")
-         .attr("dy", "2.3em")
-         .style("text-anchor", "middle")
-         .text(function(d) {
-             return d.data.value;
-         })
-         // .attr("font-family",  "Gill Sans", "Gill Sans MT")
-         .attr("font-size", function(d){
-             return d.r/5;
-         })
-         .attr("fill", "white");
+     node.append("text")
+       .attr("dy", "2.3em")
+       .style("text-anchor", "middle")
+       .text(function(d) {
+           return d.data.value;
+       })
+       // .attr("font-family",  "Gill Sans", "Gill Sans MT")
+       .attr("font-size", function(d){
+           return d.r/5;
+       })
+       .attr("fill", "white");
 
-       var x = d3.scaleLinear()
-         .domain([1, 15])
-         .range([50, 600]);
+     var x = d3.scaleLinear()
+       .domain([1, 15])
+       .range([50, 600]);
 
-       var xAxis = d3.axisBottom(x)
-         .tickSize(12)
-         .tickValues(bubcolor.domain())
-         .tickFormat(function(d) { return d });
+     var xAxis = d3.axisBottom(x)
+       .tickSize(12)
+       .tickValues(bubcolor.domain())
+       .tickFormat(function(d) { return d });
 
-       var g = d3.select("#bubble").append("g");
-       g.attr('transform', 'translate(0, 600)')
-         .call(xAxis)
-         .selectAll("rect")
-         .data(bubcolor.range().map(function(data) {
-             var d = bubcolor.invertExtent(data);
-             if (d[0] == null) d[0] = x.domain()[0];
-             if (d[1] == null) d[1] = x.domain()[1];
-             return d;
-           }))
-         .enter().insert("rect", ".tick")
-         .attr("height", 10)
-         .attr("x", function(d) { return x(d[0]); })
-         .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-         .attr("fill", function(d) { return bubcolor(d[0])});
+     var g = d3.select("#bubble").append("g");
+     g.attr('transform', 'translate(0, 600)')
+       .call(xAxis)
+       .selectAll("rect")
+       .data(bubcolor.range().map(function(data) {
+           var d = bubcolor.invertExtent(data);
+           if (d[0] == null) d[0] = x.domain()[0];
+           if (d[1] == null) d[1] = x.domain()[1];
+           return d;
+         }))
+       .enter().insert("rect", ".tick")
+       .attr("height", 10)
+       .attr("x", function(d) { return x(d[0]); })
+       .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+       .attr("fill", function(d) { return bubcolor(d[0])});
 
   })
 }

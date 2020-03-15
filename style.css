@@ -3,6 +3,12 @@ body, html {
   height: 100%;
 }
 
+/* Formatting the header */
+h1 {
+  padding: 10px 15px;
+}
+
+/* Used to add bubble and parallel coordinate chart in the same page */
 #parallel {
   flex: 1;
   height: 100%;
@@ -17,10 +23,12 @@ body, html {
   width: 100%;
 }
 
+/* Control the bursh opacity*/
 .fade {
   opacity: .2;
 }
 
+/* Tooltip for the bubble chart*/
 .bubtooltip {
     position: absolute;
     left: 50%;
@@ -34,6 +42,7 @@ body, html {
     color: white;
 }
 
+/* Tooltip for the parallel coordinate chart */
 .partooltip {
     position: absolute;
     left: 50%;
@@ -45,4 +54,48 @@ body, html {
     overflow-y: visible;
     background-color: black;
     color: white;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 10px 15px;
+  border: 1px solid #888;
+  width: 500px;
+}
+
+.modal-content .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }

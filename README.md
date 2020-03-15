@@ -15,7 +15,7 @@ Done:
   3. Allow multiple selections.
   4. I have to allow it to filter the parallel coordinates
 TODO:
-  1. Improve the multiple selection error
+  1. Improve the multiple selection error (maybe next time)
 
 ### Parallel Coordinates
  1. I have plotted the parallel coordinates chart.
@@ -26,6 +26,7 @@ TODO:
 
 TODO:
  1. When I filter using bubble and then filter using parallel coordinate and then go back to the original tags list, the selected tags opacity will return to normal. (don't know how to fix this yet)
+ 
 ```
 This is an code that calls the filter.
 
@@ -41,9 +42,4 @@ data = data.filter(function(d) {
 ```
 
 ### Embedded video
-DONE:
-
-TODO:
-  1. The TA told me to just make a pop up for the embedded video so, I might go with that. So, when people click on the video, I will create a pop up thing that will let them click on the link to go watch the video.
-
-  2. I have not started on this yet.
+DONE: Added a popup and hope that you guys will change the outlook.

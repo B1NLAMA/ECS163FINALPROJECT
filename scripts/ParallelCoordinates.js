@@ -7,13 +7,12 @@ var x = d3.scalePoint()
     .padding(1),
     y = {};
 
-// add color for the genders
+// add color for the frequency and tags
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
 
 var selectedtag = [],
   brushedtag = [],
-  freq = [];
-// var color = d3.scaleOrdinal()
+  freq = []; // will tell you what frequencies are present.
 
 var parSvg = d3.select("#parallel")
     .append("svg")
@@ -23,6 +22,7 @@ var parSvg = d3.select("#parallel")
         .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
+// This will filter
 var filteryear = "2010",
   filtermonth = "Feb";
 
@@ -44,9 +44,6 @@ function drawParallel() {
 
     // add tag to the tag variable and then parse it using JSON.
     data.forEach(function(d) {
-      // unixtime = new Date(d.published_date*1000);
-      // year.push(unixtime.getFullYear());
-      // month.push(months_arr[unixtime.getMonth()]);
       d.tags = (JSON.parse(d.tags.replace(/'/g, "\"")));
       json.forEach(function(e) {
         if (d.name === e.key){
@@ -97,6 +94,9 @@ function drawParallel() {
     var click = false;
 
     var tooltip = d3.select(".partooltip");
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var content = document.getElementById("content");
 
     // Draw the lines
     foreground = parSvg.append("g")
@@ -138,13 +138,16 @@ function drawParallel() {
         tooltip.style("left", (d3.event.pageX) +"px");
         tooltip.style("top", (d3.event.pageY + 10) + "px");
       })
-
       .on("mouseleave", function(d) {
         tooltip.style("display", "none");
       })
       .on("click", function(d) {
         if (!click) {
           console.log("workds");
+          console.log(d);
+          modal.style.display = "block";
+          d3.select("p").text(d.url);
+          // alert(d.url)
           d3.select(this.parentNode).selectAll("path").style("stroke-width", 3)
           d3.select(this).style("stroke-width", 6)
           click = true;
@@ -156,6 +159,18 @@ function drawParallel() {
           click = false;
         }
       });
+
+    // when the X is clicked on the modal, this is triggered.
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
 
     // group them together
     var axes = parSvg.selectAll(".newdata")
@@ -189,7 +204,9 @@ function drawParallel() {
       .attr("x", -8)
       .attr("width", 16);
 
+    // at the beginning of the brush, it will keep track of the bursh.
     function brushstart() {
+      // This will add the pixel and dimension of the y-axis that is burshed
       var actives = [];
       parSvg.selectAll(".brush")
           .filter(function(d) {
@@ -202,6 +219,7 @@ function drawParallel() {
               });
           });
 
+      // This will call bubble chart and clear the fade when the bursh is removed.
       actives.every(function(d) {
         // when you click out to remove the brush this if statement is exe
         if (d.extent[0] === d.extent[1]) {
@@ -262,6 +280,7 @@ function drawParallel() {
 
       // add a filtered data that is filtered by the range of comments into a temp var
       var faketag = data.filter(function(d) {
+        // bunch of bugs that I cannot fix right now
         // if (comment.length != 0 && duration.length != 0 && languages.length != 0 && views.length != 0) {
         //   return (((d.comments >= comment[1]) && (d.comments <= comment[0])) || ((d.duration >= duration[1]) && (d.duration <= duration[0]))
         //     || ((d.languages >= languages[1]) && (d.languages <= languages[0])) || ((d.views >= views[1]) && (d.views <= views[0])))
@@ -286,6 +305,7 @@ function drawParallel() {
 
     // adding a legend
     if (selectedtag.length != 0) {
+      // only add when there is a tag filter
       var legend = parSvg.selectAll("legend")
         .data(selectedtag)
         .enter()
@@ -312,7 +332,7 @@ function drawParallel() {
         .attr("dy", ".31em")
         .text(function(d) { return d; });
     } else {
-      console.log(freq);
+      // only use this when there is no tag filter
       var legend = parSvg.selectAll("legend")
         .data(freq)
         .enter()
@@ -330,7 +350,6 @@ function drawParallel() {
         .attr("width", 5)
         .attr("height", 5)
         .attr("fill", function(d, i) {
-          console.log(freq);
           return parcolor(freq[i])
       });
 

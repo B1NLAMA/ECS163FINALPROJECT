@@ -1,9 +1,9 @@
 var margin = {top: 30, right: 10, bottom: 10, left: 0},
-  width = 900 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+  width1 = 900 - margin.left - margin.right,
+  height1 = 400 - margin.top - margin.bottom;
 
 var x = d3.scalePoint()
-    .range([0, width])
+    .range([0, width1])
     .padding(1),
     y = {};
 
@@ -16,8 +16,8 @@ var selectedtag = [],
 
 var parSvg = d3.select("#parallel")
     .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width1 + margin.left + margin.right)
+        .attr("height", height1 + margin.top + margin.bottom)
     .append("g")
         .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
@@ -73,7 +73,7 @@ function drawParallel() {
     newdata.forEach(function(d) {
       y[d] = d3.scaleLinear()
         .domain( d3.extent(data, function(p) { return +p[d]; }) )
-        .range([height, 0]);
+        .range([height1, 0]);
 
       // this will call the brush
       y[d].brush = d3.brushY()

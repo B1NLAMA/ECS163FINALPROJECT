@@ -11,7 +11,7 @@ h1 {
 /* Used to add bubble and parallel coordinate chart in the same page */
 #parallel {
   flex: 1;
-  height: 100%;
+  height: 50%;
   width: 100%;
   margin: 0px auto;
   display: block;
@@ -19,7 +19,19 @@ h1 {
 
 #bubble {
   flex: 1;
-  height: 100%;
+  height: 50%;
+  width: 100%;
+}
+
+#chart {
+  flex: 1;
+  height: 50%;
+  width: 100%;
+}
+
+#calendar {
+  flex: 1;
+  height: 50%;
   width: 100%;
 }
 

@@ -1,6 +1,6 @@
 var margin2 = {top: 30, right: 10, bottom: 10, left: 0},
-  width2 = 600 - margin2.left - margin2.right,
-  height2 = 600 - margin2.top - margin2.bottom;
+  width2 = 400 - margin2.left - margin2.right,
+  height2 = 400 - margin2.top - margin2.bottom;
 
 var bubSvg = d3.select("#bubble")
     .attr("width", width2 + margin2.left + margin2.right)

@@ -9,6 +9,7 @@
     <h1> Parallel Chart that shows the data about the
       TED talks. </h1>
     <div style="display: flex; flex-direction: row; height: 100%;">
+      <svg id = "chart"></svg>
       <div id="parallel"></div>
       <svg id="bubble"></svg>
     </div>
@@ -21,7 +22,10 @@
     <!--contains the bubble chart-->
     <script src="./scripts/bubbleChart.js"></script>
 
-    <!-- Tooltips for paralle coordinates -->
+    <!--contains stacked multi line chart-->
+    <script src = "./scripts/multiChart.js"></script>
+
+    <!-- Tooltips for parallel coordinates -->
     <div class="partooltip"> </div>
     <div class="bubtooltip"> </div>
 

@@ -1,6 +1,6 @@
 var margin3 = {top: 30, right: 10, bottom: 10, left: 0},
   width3 = 500 - margin3.left - margin3.right,
-  height3 = 500 - margin3.top - margin3.bottom;
+  height3 = 490 - margin3.top - margin3.bottom;
 
 var bubSvg = d3.select("#bubble")
     .attr("width", width3 + margin3.left + margin3.right)
@@ -16,6 +16,9 @@ var bubcolor = d3.scaleThreshold()
 function bubbleChart() {
   d3.csv("./data/ted_main.csv", function(error, data) {
 
+    //console.log(filtermonth);
+    //console.log(filteryear);
+
     //clear all parSvg
     bubSvg.selectAll("*").remove();
 
@@ -24,8 +27,8 @@ function bubbleChart() {
     })
 
     // filter the data to only get the data for the following years, month, and tags
-    // if the tags are in the array then it will basicall get all the tags data from the array
-    data = data.filter(function(d) {
+    // if the tags are in the array then it will basically get all the tags data from the array
+    data = data.filter(function(d, i) {
       if (brushedtag.length != 0) {
         var included = false;
         if ((brushedtag.indexOf(d.name)) != -1) {
@@ -35,7 +38,6 @@ function bubbleChart() {
       } else {
         return ((d.year === filteryear) && (d.month === filtermonth))
       }
-
     })
 
     // an array that will contain all the tags.
@@ -187,7 +189,7 @@ function bubbleChart() {
 
     // this will add a legend for the bubble chart.
      var g = d3.select("#bubble").append("g");
-     g.attr('transform', 'translate(0, 330)')
+     g.attr('transform', 'translate(0, 298)')
        .call(xAxis)
        .selectAll("rect")
        .data(bubcolor.range().map(function(data) {

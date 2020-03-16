@@ -33,12 +33,16 @@
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <h1> Parallel Chart that shows the data about the
-      TED talks. </h1>
     <div style="display: flex; flex-direction: row; height: 100%;">
-      <svg id = "chart"></svg>
-      <div id="parallel"></div>
-      <svg id="bubble"></svg>
+      <div style="flex-direction: column; height: 100%; flex: 1;">
+        <svg id="chart"></svg>
+        <div id="parallel"></div>
+      </div>
+      <div style="flex-direction: column; height: 100%; flex: 1;">
+        <!-- This calendar svg has to be added. -->
+        <svg id="calendar"></svg>
+        <svg id="bubble"></svg>
+      </div>
     </div>
     <!-- This script will add the d3 library-->
     <script src="./scripts/d3/d3.v4.js"></script>
@@ -56,7 +60,7 @@
     <div class="partooltip"> </div>
     <div class="bubtooltip"> </div>
 
-    <!-- The Modal that basically makes a popup--> 
+    <!-- The Modal that basically makes a popup-->
     <div id="myModal" class="modal">
       <!-- Modal content -->
       <div id="content"class="modal-content">

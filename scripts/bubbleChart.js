@@ -1,10 +1,10 @@
-var margin2 = {top: 30, right: 10, bottom: 10, left: 0},
-  width2 = 400 - margin2.left - margin2.right,
-  height2 = 400 - margin2.top - margin2.bottom;
+var margin3 = {top: 30, right: 10, bottom: 10, left: 0},
+  width3 = 400 - margin3.left - margin3.right,
+  height3 = 400 - margin3.top - margin3.bottom;
 
 var bubSvg = d3.select("#bubble")
-    .attr("width", width2 + margin2.left + margin2.right)
-    .attr("height", height2 + margin2.top + margin2.bottom)
+    .attr("width", width3 + margin3.left + margin3.right)
+    .attr("height", height3 + margin3.top + margin3.bottom)
     .append("g")
       .attr("transform", "translate(0,0)");
 
@@ -64,7 +64,7 @@ function bubbleChart() {
 
     // pack all the data so that it can be used.
     var pack = d3.pack()
-      .size([width2, height2])
+      .size([width3, height3])
       .padding(1.5)
 
     // make a hierarchy in the data

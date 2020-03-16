@@ -1,11 +1,11 @@
-var margin = {top: 30, right: 10, bottom: 10, left: 0},
-  width1 = 900 - margin.left - margin.right,
-  height1 = 400 - margin.top - margin.bottom;
+var margin1 = {top: 30, right: 10, bottom: 10, left: 0},
+  width1 = 900 - margin1.left - margin1.right,
+  height1 = 400 - margin1.top - margin1.bottom;
 
-var x = d3.scalePoint()
+var x2 = d3.scalePoint()
     .range([0, width1])
     .padding(1),
-    y = {};
+    y2 = {};
 
 // add color for the frequency and tags
 var parcolor = d3.scaleOrdinal(d3.schemeCategory10);
@@ -16,11 +16,11 @@ var selectedtag = [],
 
 var parSvg = d3.select("#parallel")
     .append("svg")
-        .attr("width", width1 + margin.left + margin.right)
-        .attr("height", height1 + margin.top + margin.bottom)
+        .attr("width", width1 + margin1.left + margin1.right)
+        .attr("height", height1 + margin1.top + margin1.bottom)
     .append("g")
         .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+        "translate(" + margin1.left + "," + margin1.top + ")");
 
 // This will filter
 var filteryear = "2010",
@@ -71,24 +71,24 @@ function drawParallel() {
 
     // this will have the dimenstions of the axis
     newdata.forEach(function(d) {
-      y[d] = d3.scaleLinear()
+      y2[d] = d3.scaleLinear()
         .domain( d3.extent(data, function(p) { return +p[d]; }) )
         .range([height1, 0]);
 
       // this will call the brush
-      y[d].brush = d3.brushY()
-        .extent([[-5, y[d].range()[1]], [5, y[d].range()[0]]])
+      y2[d].brush = d3.brushY()
+        .extent([[-5, y2[d].range()[1]], [5, y2[d].range()[0]]])
         .on("start", brushstart)
         .on("brush", brush)
 
     })
 
     // set the domain for x
-    x.domain(newdata)
+    x2.domain(newdata)
 
     // Finds the path
     function path(d) {
-      return d3.line()(newdata.map(function(p) { return [x(p), y[p](d[p])]; }));
+      return d3.line()(newdata.map(function(p) { return [x2(p), y2[p](d[p])]; }));
     }
 
     var click = false;
@@ -177,17 +177,17 @@ function drawParallel() {
       .data(newdata)
       .enter().append("g")
       .attr("class", "newdata")
-      .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+      .attr("transform", function(d) { return "translate(" + x2(d) + ")"; });
 
     // make a axis and title
     parSvg.selectAll("myaxis")
       .data(newdata).enter()
       .append("g")
       // translate this element to its right position on the x axis
-      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .attr("transform", function(d) { return "translate(" + x2(d) + ")"; })
       // build the axis
       .each(function(d) { d3.select(this)
-        .call(d3.axisLeft(y[d]))
+        .call(d3.axisLeft(y2[d]))
       })
       // Add axis title
       .append("text")
@@ -199,7 +199,7 @@ function drawParallel() {
     // make the brush
     axes.append("g")
       .attr("class", "brush")
-      .each(function(d) { d3.select(this).call(y[d].brush); })
+      .each(function(d) { d3.select(this).call(y2[d].brush); })
       .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
@@ -250,7 +250,7 @@ function drawParallel() {
           });
 
         // this will provide the range of the comments
-        var comment = d3.event.selection.map(y["comments"].invert)
+        var comment = d3.event.selection.map(y2["comments"].invert)
         // var duration = d3.event.selection.map(y["duration"].invert)
         // var languages = d3.event.selection.map(y["languages"].invert)
         // var views = d3.event.selection.map(y["views"].invert)
@@ -267,7 +267,7 @@ function drawParallel() {
         foreground.classed("fade", function(d,i) {
           return !actives.every(function(active) {
             var dim = active.dimension;
-            var included = active.extent[0] <= y[dim](d[dim]) && y[dim](d[dim])  <= active.extent[1];
+            var included = active.extent[0] <= y2[dim](d[dim]) && y2[dim](d[dim])  <= active.extent[1];
             return included
           });
         });

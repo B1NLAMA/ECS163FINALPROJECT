@@ -1,18 +1,18 @@
-function calendarView(yearChosen){   
+function calendarView(yearChosen){
     //general layout information
     var cellSize = 17;
     var xOffset=20;
     var yOffset=60;
     var calY=50;//offset of calendar in each group
     var calX=25;
-    var width = 960;
-    var height = 163;
+    var width4 = 960;
+    var height4 = 163;
     var parseDate = d3.timeParse("%Y-%m-%d");  //MUST CHANGE DEPENDING ON DATE FORMAT
     format = d3.timeFormat("%d-%m-%Y");
     toolDate = d3.timeFormat("%d/%b/%y");
-    
+
     d3.csv("./data/ted_main.csv", function(error, data) {
-        
+
         //set up an array of all the dates in the data which we need to work out the range of the data
         var dates = new Array();
         var values = new Array();
@@ -21,10 +21,10 @@ function calendarView(yearChosen){
         var years = d3.nest()
         .key(function(d) { return d.year; })
         .key(function(d) { return d.date; })
-        .rollup(function(v) { 
+        .rollup(function(v) {
           return v.length; })
         .entries(data);
-        
+
         //parse the data
         data.forEach(function(d)    {
                 dates.push(parseDate(d.date));
@@ -33,13 +33,13 @@ function calendarView(yearChosen){
                 d.value=d.value;
                 d.year=d.date.getFullYear();
         });
-        
+
         var yearlyData = d3.nest()
-            .key(function(d){  
+            .key(function(d){
               return d.year;})
             .entries(data);
-        
-        
+
+
         var filtered = yearlyData.filter(function(d){
           return +d.key === yearChosen;
         });
@@ -61,12 +61,12 @@ function calendarView(yearChosen){
           }
           if(+num[i].value < +min){
             min = num[i].value;
-        }}        
-      
-        var svg = d3.select("body").append("svg")
+        }}
+
+        var svg = d3.select("#calendar")
             .attr("width","90%")
-            .attr("viewBox","0 0 "+(xOffset+width)+" 540")
-        
+            .attr("viewBox","0 0 "+(xOffset+width4)+" 540")
+
         //create an SVG group for each year
         var cals = svg.selectAll("g")
             .data(filtered)
@@ -76,20 +76,20 @@ function calendarView(yearChosen){
                 return d.key;
             })
             .attr("transform",function(d,i){
-                return "translate(0,"+(yOffset+(i*(height+calY)))+")";  
+                return "translate(0,"+(yOffset+(i*(height4+calY)))+")";
             })
-        
+
         var labels = cals.append("text")
             .attr("class","yearLabel")
             .attr("x",xOffset)
             .attr("y",15)
             .text(function(d){return d.key});
-        
+
         //create rectangle for each year
         var rects = cals.append("g")
             .attr("id","alldays")
             .selectAll(".day")
-            .data(function(d) { 
+            .data(function(d) {
                 return d3.timeDays(new Date(parseInt(d.key), 0, 1), new Date(parseInt(d.key) + 1, 0, 1)); })
             .enter().append("rect")
             .attr("id",function(d) {
@@ -101,14 +101,14 @@ function calendarView(yearChosen){
             .attr("x", function(d) {
                 return xOffset+calX+(d3.timeWeek.count(d3.timeYear(d), d)* cellSize);
             })
-            .attr("y", function(d) { 
+            .attr("y", function(d) {
               return calY+(d.getDay() * cellSize); })
             .datum(format)
             //.on('click', function(datum, index, nodes) {
             //  d3.select(this);
             //  console.log(this);
             //});
-        
+
         //create day labels
         var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
         var dayLabels=cals.append("g").attr("id","dayLabels")
@@ -125,7 +125,7 @@ function calendarView(yearChosen){
         var sequentialScale = d3.scaleSequential()
         .domain([0, 100])
         .interpolator(interpolator);
-        
+
         //let's draw the data on
         var choose = new Array();
         var dataRects = cals.append("g")
@@ -133,7 +133,7 @@ function calendarView(yearChosen){
             .selectAll(".dataday")
             .data(finalCount, function(d, i){
               choose.push(finalCount[i].value);
-              return finalCount[i].value; } 
+              return finalCount[i].value; }
             )
             .enter()
             .append("rect")
@@ -141,23 +141,23 @@ function calendarView(yearChosen){
             .attr("width",cellSize)
             .attr("height",cellSize)
             .attr("x", function(d, i){
-                return xOffset+calX+(d3.timeWeek.count(d3.timeYear(new Date(d.key)), new Date(d.key)) * cellSize); 
+                return xOffset+calX+(d3.timeWeek.count(d3.timeYear(new Date(d.key)), new Date(d.key)) * cellSize);
               })
-            .attr("y", function(d, j) { 
+            .attr("y", function(d, j) {
                 return calY+(new Date(d.key).getDay() * cellSize); })
             .attr("fill", function(d, k){
               var yes = d.value;
               return sequentialScale(yes);
             })
-        
+
         //add montly outlines for calendar
         var monthName;
         cals.append("g")
         .attr("id","monthOutlines")
         .selectAll(".month")
-        .data(function(d) { 
+        .data(function(d) {
             return d3.timeMonths(new Date(parseInt(d.key), 0, 1),
-                                  new Date(parseInt(d.key) + 1, 0, 1)); 
+                                  new Date(parseInt(d.key) + 1, 0, 1));
         })
         .enter().append("path")
         .attr("class", "month")
@@ -167,14 +167,14 @@ function calendarView(yearChosen){
               d3.select(this);
               console.log(this);
             });;
-        
+
         //retreive the bounding boxes of the outlines
         var BB = new Array();
         var mp = document.getElementById("monthOutlines").childNodes;
         for (var i=0;i<mp.length;i++){
             BB.push(mp[i].getBBox());
         }
-        
+
         var monthX = new Array();
         BB.forEach(function(d,i){
             boxCentre = d.width/2;
@@ -196,41 +196,41 @@ function calendarView(yearChosen){
 
     var axisScale = d3.scaleLinear()
     .domain(sequentialScale.domain())
-    .range([0, width / 4])
+    .range([0, width4 / 4])
 
     var axisBottom = g => g
       .attr("class", 'x-axis')
-      .attr("transform", "translate(40, "+ (height + 30 + 15) +")")
+      .attr("transform", "translate(40, "+ (height4 + 30 + 15) +")")
       .call(d3.axisBottom(axisScale)
-        .ticks(width / 80)
+        .ticks(width4 / 80)
         .tickSize(5))
   const defs = cals.append("defs");
-  
+
   const linearGradient = defs.append("linearGradient")
       .attr("id", "linear-gradient");
-  
+
   linearGradient.selectAll("stop")
     .data(sequentialScale.ticks().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: sequentialScale(t) })))
     .enter().append("stop")
     .attr("offset", d => d.offset)
     .attr("stop-color", d => d.color);
-  
+
   cals.append('g')
     .append("rect")
-    .attr("transform", "translate(40, "+ (height + 30) +")")
-    .attr("width", width / 4)
-    .attr("height", height / 10)
+    .attr("transform", "translate(40, "+ (height4 + 30) +")")
+    .attr("width", width4 / 4)
+    .attr("height", height4 / 10)
     .style("fill", "url(#linear-gradient)");
-  
+
   cals.append('g')
     .call(axisBottom);
-  
+
   return svg.node();
-   
-    
+
+
 
     });//end data load
-    
+
     //compute and return monthly path data for any year
     function monthPath(t0) {
       var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),

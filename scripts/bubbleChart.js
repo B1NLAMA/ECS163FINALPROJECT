@@ -1,6 +1,6 @@
 var margin3 = {top: 30, right: 10, bottom: 10, left: 0},
-  width3 = 400 - margin3.left - margin3.right,
-  height3 = 400 - margin3.top - margin3.bottom;
+  width3 = 500 - margin3.left - margin3.right,
+  height3 = 500 - margin3.top - margin3.bottom;
 
 var bubSvg = d3.select("#bubble")
     .attr("width", width3 + margin3.left + margin3.right)
@@ -64,7 +64,7 @@ function bubbleChart() {
 
     // pack all the data so that it can be used.
     var pack = d3.pack()
-      .size([width3, height3])
+      .size([width3, (height3 - 150)])
       .padding(1.5)
 
     // make a hierarchy in the data
@@ -177,17 +177,17 @@ function bubbleChart() {
     // This will determind how long and how many values should the legend should have.
      var x = d3.scaleLinear()
        .domain([1, 15])
-       .range([50, 600]);
+       .range([50, 450]);
 
     // This is the cuntion that will determine the ticks size and its value.
      var xAxis = d3.axisBottom(x)
-       .tickSize(12)
+       .tickSize(10)
        .tickValues(bubcolor.domain())
        .tickFormat(function(d) { return d });
 
     // this will add a legend for the bubble chart.
      var g = d3.select("#bubble").append("g");
-     g.attr('transform', 'translate(0, 600)')
+     g.attr('transform', 'translate(0, 330)')
        .call(xAxis)
        .selectAll("rect")
        .data(bubcolor.range().map(function(data) {
@@ -197,7 +197,7 @@ function bubbleChart() {
            return d;
          }))
        .enter().insert("rect", ".tick")
-       .attr("height", 10)
+       .attr("height", 8)
        .attr("x", function(d) { return x(d[0]); })
        .attr("width", function(d) { return x(d[1]) - x(d[0]); })
        .attr("fill", function(d) { return bubcolor(d[0])});

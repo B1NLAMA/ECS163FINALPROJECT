@@ -112,12 +112,6 @@ h1 {
   cursor: pointer;
 }
 
-#calendar {
-  flex: 1;
-  height: 100%;
-  width: 100%;
-}
-
 .month {
   fill: none;
   stroke: #000;
@@ -129,10 +123,10 @@ h1 {
   stroke: #ccc;
 }
 
-text {
+/* text {
   font-family:sans-serif;
   font-size:1.5em;
-}
+} */
 
 .dayLabel {
   fill:#aaa;
@@ -149,7 +143,5 @@ text {
   fill:#aaa;
   font-size:1.2em;
 }
-    
+
 .key    {font-size:0.5em;}
-
-

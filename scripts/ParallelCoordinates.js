@@ -1,5 +1,5 @@
 var margin1 = {top: 30, right: 10, bottom: 10, left: 0},
-  width1 = 900 - margin1.left - margin1.right,
+  width1 = 800 - margin1.left - margin1.right,
   height1 = 400 - margin1.top - margin1.bottom;
 
 var x2 = d3.scalePoint()
@@ -22,14 +22,61 @@ var parSvg = d3.select("#parallel")
         .attr("transform",
         "translate(" + margin1.left + "," + margin1.top + ")");
 
-// This will filter
 var filteryear = "2010",
-  filtermonth = "Feb";
+    filtermonth = "Feb";
+// This will filter
+function filterForParallel(date){
+  console.log(date);
+  var filter = date.split("-");
+  if(+filter[1] === 01){
+    filtermonth = "Jan";
+  }
+  else if(+filter[1] === 02){
+    filtermonth = "Feb";
+  }
+  else if(+filter[1] === 03){
+    filtermonth = "Mar";
+  }
+  else if(+filter[1] === 04){
+    filtermonth = "Apr";
+  }
+  else if(+filter[1] === 05){
+    filtermonth = "May";
+  }
+  else if(+filter[1] === 06){
+    filtermonth = "Jun";
+  }
+  else if(+filter[1] === 07){
+    filtermonth = "Jul";
+  }
+  else if(+filter[1] === 08){
+    filtermonth = "Aug";
+  }
+  else if(+filter[1] === 09){
+    filtermonth = "Sep";
+  }
+  else if(+filter[1] === 10){
+    filtermonth = "Oct";
+  }
+  else if(+filter[1] === 11){
+    filtermonth = "Nov";
+  }
+  else{
+    filtermonth = "Dec";
+  }
+
+  filteryear = filter[0];
+  drawParallel(); //with new month, year
+  bubbleChart();
+}
 
 function drawParallel() {
   d3.csv("./data/ted_main.csv", function(error, data) {
     if (error) throw error;
 
+    console.log("filter year: ", filteryear);
+    console.log("filter month: ", filtermonth);
+    
     //clear all parSvg
     parSvg.selectAll("*").remove();
 
@@ -62,6 +109,7 @@ function drawParallel() {
             included = true;
           }
         }
+        
         return ((d.year === filteryear) && (d.month === filtermonth)) && included
       } else {
         return ((d.year === filteryear) && (d.month === filtermonth))
@@ -69,7 +117,7 @@ function drawParallel() {
 
     })
 
-    // this will have the dimenstions of the axis
+    // this will have the dimensions of the axis
     newdata.forEach(function(d) {
       y2[d] = d3.scaleLinear()
         .domain( d3.extent(data, function(p) { return +p[d]; }) )
@@ -206,7 +254,7 @@ function drawParallel() {
 
     // at the beginning of the brush, it will keep track of the bursh.
     function brushstart() {
-      // This will add the pixel and dimension of the y-axis that is burshed
+      // This will add the pixel and dimension of the y-axis that is brushed
       var actives = [];
       parSvg.selectAll(".brush")
           .filter(function(d) {

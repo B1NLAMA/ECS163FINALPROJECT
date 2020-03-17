@@ -117,7 +117,7 @@ function calendarView(yearChosen){
             .text(d);
         })
 
-        interpolator = d3.interpolate("purple", "blue");
+        interpolator = d3.interpolate("#fdbb84", "#d7301f");
         var sequentialScale = d3.scaleSequential()
         .domain([0, 100])
         .interpolator(interpolator);

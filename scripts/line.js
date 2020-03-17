@@ -100,6 +100,7 @@
           calendarView(+d.key);
           filteryear = d.key;
           drawParallel();
+          bubbleChart();
       })
 
       .each(function() {

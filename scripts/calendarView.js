@@ -7,13 +7,12 @@ function calendarView(yearChosen){
     var calX=25;
     var width4 = 400;
     var height4 = 163;
-    var parseDate = d3.timeParse("%Y-%m-%d");
+    var parseDate = d3.timeParse("%Y-%m-%d"); 
     format = d3.timeFormat("%d-%m-%Y");
     toolDate = d3.timeFormat("%d/%b/%y");
 
     d3.csv("./data/ted_main.csv", function(error, data) {
-
-
+        
         var dates = new Array();
         var values = new Array();
         var dateData = data;
@@ -103,7 +102,7 @@ function calendarView(yearChosen){
               return calY+(d.getDay() * cellSize); })
             .datum(format)
 
-        var clicked = new Array();
+        var clicked = new Array();  
         //create day labels
         var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
         var dayLabels=cals.append("g").attr("id","dayLabels")
@@ -116,7 +115,7 @@ function calendarView(yearChosen){
             .text(d);
         })
 
-        interpolator = d3.interpolate("purple", "blue");
+        interpolator = d3.interpolate("#fdbb84", "#d7301f");
         var sequentialScale = d3.scaleSequential()
         .domain([0, 100])
         .interpolator(interpolator);
@@ -185,10 +184,6 @@ function calendarView(yearChosen){
         .attr("class", "month")
         .attr("transform","translate("+(xOffset+calX)+","+calY+")")
         .attr("d", monthPath)
-        /*.on('click', function(datum, index, nodes) {
-              d3.select(this);
-              console.log(this);
-            });*/
 
         //retreive the bounding boxes of the outlines
         var BB = new Array();

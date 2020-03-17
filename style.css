@@ -63,6 +63,21 @@ body, html {
     color: white;
 }
 
+/* Tooltip for the calendar view*/
+.caltooltip {
+    position: absolute;
+    left: 50%;
+    margin-left: -60px;
+    text-align: center;
+    border: 5px solid black;
+    border-radius: 5px;
+    overflow-x: visible;
+    overflow-y: visible;
+    background-color: black;
+    color: white;
+}
+
+
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */

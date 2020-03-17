@@ -22,8 +22,8 @@ var parSvg = d3.select("#parallel")
         .attr("transform",
         "translate(" + margin1.left + "," + margin1.top + ")");
 
-var filteryear = "2010",
-    filtermonth = "Feb";
+var filteryear = "2012",
+    filtermonth = "Jan";
 // This will filter
 function filterForParallel(date){
   console.log(date);

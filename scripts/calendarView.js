@@ -259,4 +259,4 @@ function calendarView(yearChosen){
     }
 } //end of function
 
-calendarView(2014);
+calendarView(+filteryear);

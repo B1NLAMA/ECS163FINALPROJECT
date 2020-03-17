@@ -73,6 +73,10 @@
       .append("g")
       .attr("class", "make")
       .attr("id", function(d) { return d.key; })
+        /*.on("click", function(d){
+            console.log(+d.key)
+            calendarView(+d.key);
+        });*/
 
 
     var transCount = 0;
@@ -90,6 +94,16 @@
       .style("stroke", function(d) { return z(d.key); })
       .attr("stroke-dasharray", function(d) { return this.getTotalLength() + " " + this.getTotalLength(); })
       .attr("stroke-dashoffset", function(d) { return this.getTotalLength(); })
+      .style("stroke-width", 3)
+      .on("click", function(d){
+          console.log(+d.key)
+          console.log(d);
+          calendarView(+d.key);
+          filteryear = d.key;
+          drawParallel();
+          bubbleChart();
+      })
+
       .each(function() {
          transCount++;
        })
@@ -97,12 +111,123 @@
           .duration(5000)
           .ease(d3.easeSin)
           .attr("stroke-dashoffset", 0)
-          .on("end", function() {
-              transCount--;
-              if (!transCount) {
-                drawInteractivity(filteredMakes);
-              }}
-          );
+
+      /*svg.append("text")
+          .attr("x", width+55)
+          .attr("y", height + margin.top -305)
+          .attr("font-weight", "bold")
+          .attr("class", "legend")
+          .style("fill", "#1f77b4")
+          .on("click", function(){
+              var filteredLine = make.filter(function(d,i){return i ===2;})
+              if (visible == true){
+                  filteredLine.transition().duration(500).style("opacity", 0)
+
+                  visible = false;
+                  return visible;
+              }
+              else {
+                  filteredLine.transition().duration(500).style("opacity", 1)
+                  visible = true;
+                  return visible;
+              }
+          })
+          .text("Airbus");
+
+      var visible = true;
+      svg.append("text")
+          .attr("x", width+55)
+          .attr("y", height + margin.top -440)
+          .attr("font-weight", "bold")
+          .attr("class", "legend")
+          .style("fill", "#ff7f0e")
+          .on("click", function(){
+              var filteredLine = make.filter(function(d,i){return i ===1;})
+              if (visible == true){
+                  filteredLine.transition().duration(500).style("opacity", 0)
+                  visible = false;
+                  return visible;
+              }
+              else {
+                  filteredLine.transition().duration(500).style("opacity", 1)
+                  visible = true;
+                  return visible;
+              }
+          })
+          .text("Boeing");
+      svg.append("text")
+          .attr("x", width+55)
+          .attr("y", height + margin.top -100)
+          .attr("font-weight", "bold")
+          .attr("class", "legend")
+          .style("fill", "#2ca02c")
+          .on("click", function(){
+              var filteredLine = make.filter(function(d,i){return i ===4;})
+              if (visible == true){
+                  filteredLine.transition().duration(500).style("opacity", 0)
+                  visible = false;
+                  return visible;
+              }
+              else {
+                  filteredLine.transition().duration(500).style("opacity", 1)
+                  visible = true;
+                  return visible;
+              }
+          })
+          .text("Bombardier");
+      svg.append("text")
+          .attr("x", width+55)
+          .attr("y", height + margin.top -85)
+          .attr("font-weight", "bold")
+          .attr("class", "legend")
+          .style("fill", "#9467bd")
+          .on("click", function(){
+              var filteredLine = make.filter(function(d,i){return i ===3;})
+              if (visible == true){
+                  filteredLine.transition().duration(500).style("opacity", 0)
+                  visible = false;
+                  return visible;
+              }
+              else {
+                  filteredLine.transition().duration(500).style("opacity", 1)
+                  visible = true;
+                  return visible;
+              }
+          })
+          .text("Embraer");
+      svg.append("text")
+          .attr("x", width+55)
+          .attr("y", height + margin.top )
+          .attr("font-weight", "bold")
+          .attr("class", "legend")
+          .style("fill", "#8c564b")
+          .on("click", function(){
+              var filteredLine = make.filter(function(d,i){return i ===0;})
+              if (visible == true){
+                  filteredLine.transition().duration(500).style("opacity", 0)
+                  visible = false;
+                  return visible;
+              }
+              else {
+                  filteredLine.transition().duration(500).style("opacity", 1)
+                  visible = true;
+                  return visible;
+              }
+          })
+          .text("McDonnell Douglas")
+      svg.append("line")
+          .attr("x1",1000)
+          .attr("y1",260)
+          .attr("x2",880)
+          .attr("y2",260)
+          .attr("stroke","black")
+          .attr("stroke-width",2)
+          .attr("marker-end","url(#arrow)");
+      svg.append("text")
+         .attr("x", width+135)
+         .attr("y", height + margin.top -293)
+         .text("click me!")*/
+
 
       // Append legends
     var legendLabel = g.append("g")
@@ -157,118 +282,5 @@
     //d.date = parseTime(d.Activity_Period);
     //d.count = count(d);
     return d;
-  }
-
-  function drawInteractivity(makes) {
-    // Append interactivity
-    var mouseG = svg.append("g")
-      .attr("class", "mouse-over-effects");
-
-    mouseG.append("path") // Vertical line to follow mouse
-      .attr("class", "mouse-line")
-      .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
-      .style("stroke", "darkgray")
-      .style("stroke-width", "1.25px")
-      .style("opacity", "0");
-
-    mouseG.append("text") // Date on vertical line
-      .attr("class", "mouse-line-text")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 12)
-      .attr("font-weight", "bold")
-      .attr("text-anchor", "middle")
-      .style("opacity", "0");
-
-    var lines = document.getElementsByClassName('line');
-
-    var mousePerLine = mouseG.selectAll('.mouse-per-line')
-      .data(makes)
-      .enter()
-      .append("g")
-      .attr("class", "mouse-per-line");
-
-    mousePerLine.append("circle")
-      .attr("r", 5)
-      .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
-      .style("stroke", function(d) { return z(d.key); })
-      .style("fill", "none")
-      .style("stroke-width", "1.25px")
-      .style("opacity", "0");
-
-    mousePerLine.append("text")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("transform", "translate(60,20)");
-
-    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-      .attr('width', width) // can't catch mouse events on a g element
-      .attr('height', height)
-      .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
-      .attr('fill', 'none')
-      .attr('pointer-events', 'all')
-      .on('mouseout', function() { // on mouse out hide line, circles and text
-        d3.select(".mouse-line")
-          .style("opacity", "0");
-        d3.select(".mouse-line-text")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-per-line circle")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-per-line text")
-          .style("opacity", "0");
-      })
-      .on('mouseover', function() { // on mouse in show line, circles and text
-        d3.select(".mouse-line")
-          .style("opacity", "1");
-        d3.select(".mouse-line-text")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-per-line circle")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-per-line text")
-          .style("opacity", "1");
-      })
-      .on('mousemove', function() { // mouse moving over canvas
-        var mouse = d3.mouse(this);
-        d3.select(".mouse-line-text")
-          .attr("transform", "translate(" + (mouse[0] + margin.left) + ", " + 50 + ")");
-
-        d3.select(".mouse-line")
-          .attr("d", function() {
-            var d = "M" + mouse[0] + "," + height;
-            d += " " + mouse[0] + "," + 0;
-            return d;
-          });
-
-        d3.selectAll(".mouse-per-line")
-          .attr("transform", function(d, i) {
-            var xDate = x.invert(mouse[0]),
-                bisect = d3.bisector(function(d) { return d.date; }).right;
-                idx = bisect(d.values, xDate);
-
-            var beginning = 0,
-                end = lines[i].getTotalLength(),
-                target = null;
-
-            while (true){
-              target = Math.floor((beginning + end) / 2);
-              pos = lines[i].getPointAtLength(target);
-              if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-                  break;
-              }
-              if (pos.x > mouse[0])      end = target;
-              else if (pos.x < mouse[0]) beginning = target;
-              else break; //position found
-            }
-
-            d3.select(this).select("text")
-              .text(Math.round(y.invert(pos.y)).toLocaleString());
-
-            var formatTime = d3.timeFormat("%B, %Y");
-
-            d3.select(".mouse-line-text")
-              .text(formatTime(xDate));
-
-            return "translate(" + mouse[0] + "," + pos.y +")";
-          });
-        });
   }
 })();

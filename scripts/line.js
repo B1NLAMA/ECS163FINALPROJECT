@@ -97,11 +97,9 @@
       .style("stroke-width", 3)
       .on("click", function(d){
           console.log(+d.key)
-          console.log(d);
           calendarView(+d.key);
           filteryear = d.key;
           drawParallel();
-          bubbleChart();
       })
 
       .each(function() {

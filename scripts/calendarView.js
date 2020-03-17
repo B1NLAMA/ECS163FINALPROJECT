@@ -13,6 +13,7 @@ function calendarView(yearChosen){
 
     d3.csv("./data/ted_main.csv", function(error, data) {
 
+
         var dates = new Array();
         var values = new Array();
         var dateData = data;
@@ -63,6 +64,7 @@ function calendarView(yearChosen){
 
         var svg = d3.select("#calendar")
             .attr("width", width4)
+        svg.selectAll('*').remove()
 
         //create a group for each year
         var cals = svg.selectAll("g")
@@ -115,7 +117,7 @@ function calendarView(yearChosen){
             .text(d);
         })
 
-        interpolator = d3.interpolate("#fdbb84", "#d7301f");
+        interpolator = d3.interpolate("purple", "blue");
         var sequentialScale = d3.scaleSequential()
         .domain([0, 100])
         .interpolator(interpolator);
@@ -184,6 +186,10 @@ function calendarView(yearChosen){
         .attr("class", "month")
         .attr("transform","translate("+(xOffset+calX)+","+calY+")")
         .attr("d", monthPath)
+        /*.on('click', function(datum, index, nodes) {
+              d3.select(this);
+              console.log(this);
+            });*/
 
         //retreive the bounding boxes of the outlines
         var BB = new Array();
@@ -259,4 +265,4 @@ function calendarView(yearChosen){
     }
 } //end of function
 
-calendarView(+filteryear);
+calendarView(2012);

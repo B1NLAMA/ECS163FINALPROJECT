@@ -98,6 +98,7 @@ function bubbleChart() {
       .style("fill", function(d,i) {
           return bubcolor(d.data.value);
       })
+      .attr("stroke", "black")
       .on("mouseover", function(d) {
         tooltip.style("display", "block");
 
@@ -161,7 +162,7 @@ function bubbleChart() {
      .attr("font-size", function(d){
          return d.r/5;
      })
-     .attr("fill", "white");
+     .attr("fill", "black");
 
   // Add a value/frequency of tags.
    node.append("text")
@@ -174,7 +175,7 @@ function bubbleChart() {
      .attr("font-size", function(d){
          return d.r/5;
      })
-     .attr("fill", "white");
+     .attr("fill", "black");
 
     // This will determind how long and how many values should the legend should have.
      var x = d3.scaleLinear()

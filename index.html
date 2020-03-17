@@ -1,41 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<style>
-  .xAxis .tick text{
-    fill: black;
-  }
-  .grid .tick line{
-    stroke: grey;
-    stroke-dasharray: 5, 10;
-    opacity: 0.7;
-  }
-  .grid path{
-    stroke-width: 0;
-  }
-
-  .node circle {
-    fill: #999;
-  }
-  .node--internal circle {
-    fill: #555;
-  }
-  .node--internal text {
-    font-size: 16px;
-    text-shadow: 0 2px 0 #fff, 0 -2px 0 #fff, 2px 0 0 #fff, -2px 0 0 #fff;
-  }
-  .node--leaf text {
-    fill: black;
-  }
-</style>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Final Project</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
     <div style="display: flex; flex-direction: row; height: 100%;">
       <div style="flex-direction: column; height: 100%; flex: 1;">
-        <svg id="chart"></svg>
+      		<svg id="vis1" width="700" height="300">
+              <defs>
+                  <marker
+                          id="arrow"
+                          markerUnits="strokeWidth"
+                          markerWidth="12"
+                          markerHeight="12"
+                          viewBox="0 0 12 12"
+                          refX="6"
+                          refY="6"
+                          orient="auto">
+                      <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #000000;"></path>
+                  </marker>
+              </defs>
+          </svg>
         <div id="parallel"></div>
       </div>
       <div style="flex-direction: column; height: 100%; flex: 1;">
@@ -54,7 +42,7 @@
     <script src="./scripts/bubbleChart.js"></script>
 
     <!--contains stacked multi line chart-->
-    <script src = "./scripts/multiChart.js"></script>
+    <script src="./scripts/line.js"></script>
 
     <!--contains stacked calendar view chart-->
     <script src = "./scripts/calendarView.js"></script>
@@ -66,7 +54,7 @@
     <!-- The Modal that basically makes a popup-->
     <div id="myModal" class="modal">
       <!-- Modal content -->
-      <div id="content"class="modal-content">
+      <div id="content" class="modal-content">
         <div class="title">URL to the TED talk</div>
         <span class="close">&times;</span>
         <p></p>

@@ -76,7 +76,7 @@ function drawParallel() {
 
     console.log("filter year: ", filteryear);
     console.log("filter month: ", filtermonth);
-    
+
     //clear all parSvg
     parSvg.selectAll("*").remove();
 
@@ -109,7 +109,7 @@ function drawParallel() {
             included = true;
           }
         }
-        
+
         return ((d.year === filteryear) && (d.month === filtermonth)) && included
       } else {
         return ((d.year === filteryear) && (d.month === filtermonth))

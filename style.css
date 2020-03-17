@@ -119,18 +119,18 @@ body, html {
 }
 
 .dayLabel {
-  fill:#aaa;
+  fill:"black";
   font-size:0.8em;
 }
 
 .monthLabel {
   text-anchor:middle;
   font-size:0.8em;
-  fill:#aaa;
+  fill: "black";
 }
 
 .yearLabel  {
-  fill:#aaa;
+  fill:"black";
   font-size:1.2em;
 }
 
